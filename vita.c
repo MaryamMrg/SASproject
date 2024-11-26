@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #define MAX_TASKS 100
 
 // task structure
@@ -14,9 +13,14 @@ typedef struct {
 } Task;
 
 void displayMenu() {
-    printf("===== task management application=====\n");
+    printf("\n");
+
+    printf("===== *task management application* =====\n");
+    printf("===================================\n");
+    printf("created by : MARYAM EL OUADAA\n");
+    printf("=== ENAA BENI MELLAL ===\n");
     printf("1. add a Task\n");
-    printf("2.display the Task\n");
+    printf("2. display the Task\n");
     printf("3. update the Task\n");
     printf("4. delete the Task\n");
     printf("5. Filter by Priority\n");
@@ -42,7 +46,7 @@ void addtask(Task tasks[MAX_TASKS], int nbTaches) {
     printf("expary_date (YYYY-MM-DD): ");
     fgets(newtask.expary_date, 11, stdin);
     newtask.expary_date[strcspn(newtask.expary_date, "\n")] = '\0';
-
+getchar();
     printf("Priority (High/Low): ");
     fgets(newtask.priority, 10, stdin);
     newtask.priority[strcspn(newtask.priority, "\n")] = '\0';
@@ -51,11 +55,11 @@ void addtask(Task tasks[MAX_TASKS], int nbTaches) {
     fgets(newtask.statut, 20, stdin);
     newtask.statut[strcspn(newtask.statut, "\n")] = '\0';
 
-    // Ajouter la tâche à la liste
+    // Add task to the list
     tasks[nbTaches] = newtask;
 }
 
-// Afficher la liste des tâches
+// display the task list
 void displaytask(Task tasks[MAX_TASKS], int nbTaches) {
     if (nbTaches == 0) {
         printf("no tasks yet.\n");
@@ -99,16 +103,80 @@ void updatetask(Task tasks[MAX_TASKS], int nbTaches) {
 
     printf("New priority (High/Low): ");
     fgets(tasks[id].priority, 10, stdin);
-    tasks[id].priority[strcspn(tasks[id].priority1, "\n")] = '\0';
-
+    tasks[id].priority[strcspn(tasks[id].priority, "\n")] = '\0';
+getchar();
     printf("New statut (Complete/Incomplete): ");
     fgets(tasks[id].statut, 20, stdin);
     tasks[id].statut[strcspn(tasks[id].statut, "\n")] = '\0';
+    getchar();
 }
 
-void deletetask(Task tasks[MAX_TASKS], int nbtaches) {
+    
+   int deletetask(Task tasks[MAX_TASKS], int nbtaches) {
     int id;
-    printf("enter the id dof the task (1-%d): ", nbtaches);
+    printf("Enter the ID of the task to delete (1-%d): ", nbtaches);
+    scanf("%d", &id);
+    id--; 
+
+    if (id < 0 || id >= nbtaches) {
+        printf("Invalid task ID.\n");
+        return nbtaches;  
+    }
+
+    
+    for (int i = id; i < nbtaches - 1; i++) {
+        tasks[i] = tasks[i + 1];
+    }
+
+    nbtaches--;  
+    printf("Task deleted successfully.\n");
+    return nbtaches;  
+}
+ /*void filterTasks() {
+    int choice;
+    printf("1. Filtrer par priorité\n2. Filtrer par statut\n3. Filtrer par date\nEntrez votre choix : ");
+    scanf("%d", &choice);
+
+    switch (choice) {
+        case 1: {
+            int prio;
+            printf("1. URGENT\n2. PAS URGENT\nEntrez votre choix : ");
+            scanf("%d", &prio);
+            if (prio == 1) UR();
+            else if (prio == 2) URP();
+            else printf("Choice invalide.\n");
+            break;
+        }
+        case 2: {
+            int stat;
+            printf("1. COMPLETE\n2. INCOMPLETE\nEntrez votre choix : ");
+            scanf("%d", &stat);
+            if (stat == 1) CMP();
+            else if (stat == 2) inCMP();
+            else printf("Choice invalide.\n");
+            break;
+        }
+        case 3: {
+            int Mois, Jour;
+            printf("Entrez le mois : ");
+            scanf("%d", &Mois);
+            printf("Entrez le jour : ");
+            scanf("%d", &Jour);
+            for (int i = 0; i < Taille; i++) {
+                if (tasks[i].date.Mois == Mois && tasks[i].date.Jour == Jour) {
+                    printf("Tâche %d : %s\n", i + 1, tasks[i].title);
+                }
+            }
+            break;
+        }
+        default:
+            printf("Choice invalide.\n");
+    }
+}*/
+
+/*void deletetask(Task tasks[MAX_TASKS], int nbtaches) {
+    int id;
+    printf("enter the id of the task (1-%d): ", nbtaches);
     scanf("%d, &id");
     id--;
     if (id < 0 || id >= nbtaches) {
@@ -120,7 +188,7 @@ void deletetask(Task tasks[MAX_TASKS], int nbtaches) {
     }
     (nbtaches)--;
     printf("task deleted succefully.\n");
-}
+}*/
 
 void filterbyPriority(Task tasks[MAX_TASKS], int nbtaches, char priority[10]) {
 for (int i = 0; i < nbtaches; i++){
@@ -147,9 +215,9 @@ void filterbyStatut(Task tasks[MAX_TASKS], int nbtaches, char statut[20]) {
             
         }
     }
-}
+}                         
 
-int comparerDates(Task taskA, Task taskB) {
+int compareDates(Task taskA, Task taskB) {
      return strcmp(taskA.expary_date, taskB.expary_date);
 }
 
@@ -157,7 +225,7 @@ void triTasks(Task tasks[MAX_TASKS], int nbtaches) {
     Task temp;
     for (int i = 0 ;i < nbtaches - 1; i++) {
         for (int j = 0; j < nbtaches - i - 1; i++) {
-            if (comparerDates(tasks[j], tasks[j + i]) > 0) {
+            if (compareDates(tasks[j], tasks[j + i]) > 0) {
                 temp = tasks[j];
                 tasks[j] = tasks[j + i];
                 tasks[j + 1] = temp;
@@ -206,6 +274,7 @@ int main() {
                 break;
             case 4:
                  deletetask(tasks, nbtaches);
+                 nbtaches = deletetask(tasks, nbtaches);
                  break;
             case 5:
                  {
